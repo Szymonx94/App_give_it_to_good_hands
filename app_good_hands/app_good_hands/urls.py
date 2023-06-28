@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from goodplan.views import (
+    FirstSiteView,
+
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", FirstSiteView.as_view(), name="first-page"),
 ]
