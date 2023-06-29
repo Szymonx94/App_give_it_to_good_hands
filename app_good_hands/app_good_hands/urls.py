@@ -17,11 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from goodplan.views import (
-    FirstSiteView,
-
+    LandingPageView,
+    AddDonationView,
+    LoginView,
+    RegisterView,
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", FirstSiteView.as_view(), name="first-page"),
+    path("", LandingPageView.as_view(), name="first-page"),
+    path("add_donation/", AddDonationView.as_view(), name="add-donation"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("register/", RegisterView.as_view(), name="register"),
 ]
