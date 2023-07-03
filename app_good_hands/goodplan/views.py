@@ -1,14 +1,22 @@
 from django.shortcuts import render
 from django.views import View
 from django.template.response import TemplateResponse
+from .models import Donation, Institution
+
 class LandingPageView(View):
     """
     View first site
     """
 
     @staticmethod
-    def get(request):
-        return TemplateResponse(request, "base.html")
+    def get( request):
+        total_bags = Donation.objects.count()
+        supported_org = Institution.objects.count()
+        context = {
+            "total_bags": total_bags,
+            "supported_org": supported_org
+        }
+        return render(request, "index.html", context)
 
 class AddDonationView(View):
     """
@@ -29,5 +37,4 @@ class RegisterView(View):
     """ View registratrion for new users"""
 
     def get(self, request):
-        # form = RegistrationForm()
-        return render(request, "register.html") #{"form": form})
+        return render(request, "register.html")
