@@ -12,9 +12,13 @@ class LandingPageView(View):
     def get( request):
         total_bags = Donation.objects.count()
         supported_org = Institution.objects.count()
+        institutions = Institution.objects.all()
+        institution_type = institutions.values('type').distinct()
         context = {
             "total_bags": total_bags,
-            "supported_org": supported_org
+            "supported_org": supported_org,
+            'institutions': institutions,
+            'institution_type': institution_type,
         }
         return render(request, "index.html", context)
 
