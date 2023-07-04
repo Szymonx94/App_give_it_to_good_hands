@@ -15,7 +15,16 @@
 
     <section class="login-page">
       <h2>Załóż konto</h2>
-      <form>
+          {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+
         <div class="form-group">
           <input type="text" name="name" placeholder="Imię" />
         </div>
@@ -33,7 +42,7 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
+          <a href="{% url 'login' %}" class="btn btn--without-border">Zaloguj się</a>
           <button class="btn" type="submit">Załóż konto</button>
         </div>
       </form>
@@ -61,6 +70,7 @@
 
           <button class="btn" type="submit">Wyślij</button>
         </form>
+
       </div>
       <div class="bottom-line">
         <span class="bottom-line--copy">Copyright &copy; 2018</span>
