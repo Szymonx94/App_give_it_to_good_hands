@@ -30,7 +30,7 @@ class LandingPageView(View):
 
 class AddDonationView(LoginRequiredMixin, View):
     """
-    View AddDonation
+    View AddDonation and post services
     """
 
     login_url = 'login'
@@ -66,7 +66,7 @@ class AddDonationView(LoginRequiredMixin, View):
                                            pick_up_comment=pick_up_comment, user=user)
         donation.categories.set(categories)
         donation.save()
-        return render(request, 'first-page')
+        return render(request, 'form-confirmation.html')
 
 class LoginView(View):
     """Login Users"""

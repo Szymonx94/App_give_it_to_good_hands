@@ -253,3 +253,64 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
+
+window.addEventListener('DOMContentLoaded', function() {
+  const categoryCheckboxes = document.querySelectorAll('input[name="categories"]');
+  const organizationElements = document.getElementsByClassName('organization');
+
+  let selectedCategories = [];
+
+  categoryCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      selectedCategories = Array.from(categoryCheckboxes)
+        .filter(function(checkbox) {
+          return checkbox.checked;
+        })
+        .map(function(checkbox) {
+          return checkbox.value;
+        });
+
+      showFilteredOrganizations(selectedCategories);
+    });
+  });
+
+  const showFilteredOrganizations = function(selectedCategories) {
+    for (let i = 0; i < organizationElements.length; i++) {
+      const organizationElement = organizationElements[i];
+      const categoriesAttr = organizationElement.getAttribute('data-categories');
+      const categories = categoriesAttr.split(',');
+
+      if (
+        selectedCategories.length === 0 ||
+        selectedCategories.some(function(categoryId) {
+          return categories.includes(categoryId);
+        })
+      ) {
+        organizationElement.style.display = 'block';
+      } else {
+        organizationElement.style.display = 'none';
+      }
+    }
+  };
+
+
+    const categorySelect = document.getElementById('category-select');
+
+    categorySelect.addEventListener('change', function() {
+        const selectedCategoryId = parseInt(categorySelect.value);
+        showFilteredOrganizations(selectedCategoryId);
+    });
+
+    const prevStepButton = document.querySelector('.prev-step');
+    const nextStepButton = document.querySelector('.next-step');
+
+    prevStepButton.addEventListener('click', function() {
+        // Button back
+        // ...
+    });
+
+    nextStepButton.addEventListener('click', function() {
+        // button next
+        // ...
+    });
+});
