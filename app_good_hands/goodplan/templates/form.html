@@ -121,7 +121,7 @@
             <div
                     class="form-group form-group--checkbox organization"
                     data-categories="{% for category in institution.categories.all %}{{ category.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
-                    {% if selectedInstitutionId== institution.id %}style="display: block;" {% else
+                    {% if selectedInstitutionId == institution.id %}style="display: block;" {% else
                     %}style="display: none;" {% endif %}
             >
               <label>
@@ -129,7 +129,7 @@
                         type="radio"
                         name="organization"
                         value="{{ institution.id }}"
-                        {% if selectedInstitutionId== institution.id %}checked{% endif %}
+                        {% if selectedInstitutionId == institution.id %}checked{% endif %}
                 />
                 <span class="checkbox radio"></span>
                 <span class="description">
@@ -147,7 +147,7 @@
           </div>
 
 
-            <!-- STEP 5 -->
+            <!-- STEP 4 -->
             <div data-step="4">
                 <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
@@ -199,7 +199,7 @@
                 </div>
             </div>
 
-            <!-- STEP 6 -->
+            <!-- STEP 5 -->
             <div data-step="5">
                 <h3>Podsumowanie Twojej darowizny</h3>
 
@@ -209,37 +209,31 @@
                         <ul>
                             <li>
                                 <span class="icon icon-bag"></span>
-                                <span class="summary--text"
-                                >4 worki ubrań w dobrym stanie dla dzieci</span
-                                >
+                                <span class="summary--text">worki ubrań w dobrym stanie dla dzieci</span>
                             </li>
-
-                            <li>
-                                <span class="icon icon-hand"></span>
-                                <span class="summary--text"
-                                >Dla fundacji "Mam marzenie" w Warszawie</span
-                                >
-                            </li>
+                            <!-- Add more items if needed -->
                         </ul>
                     </div>
 
                     <div class="form-section form-section--columns">
                         <div class="form-section--column">
-                            <h4>Adres odbioru:</h4>
+                            <h4>Dane odbiorcy:</h4>
                             <ul>
-                                <li>Prosta 51</li>
-                                <li>Warszawa</li>
-                                <li>99-098</li>
-                                <li>123 456 789</li>
+                                <li id="summary-quantity"></li>
+                                <li id="summary-institution"></li>
+                                <li id="summary-address-display"></li>
+                                <li id="summary-city-display"></li>
+                                <li id="summary-zip-code-display"></li>
+                                <li id="summary-phone-number-display"></li>
                             </ul>
                         </div>
 
                         <div class="form-section--column">
                             <h4>Termin odbioru:</h4>
                             <ul>
-                                <li>13/12/2018</li>
-                                <li>15:40</li>
-                                <li>Brak uwag</li>
+                                <li id="summary-pick-up-date-display"></li>
+                                <li id="summary-pick-up-time-display"></li>
+                                <li id="summary-pick-up-comment-display"></li>
                             </ul>
                         </div>
                     </div>
@@ -251,6 +245,7 @@
                 </div>
             </div>
         </form>
+
     </div>
 </section>
 

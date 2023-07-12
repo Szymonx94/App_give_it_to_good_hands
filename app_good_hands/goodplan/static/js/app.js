@@ -314,3 +314,60 @@ window.addEventListener('DOMContentLoaded', function() {
         // ...
     });
 });
+
+// steps 5
+
+
+function goToStep(step) {
+    document.querySelectorAll('[data-step]').forEach(function (element) {
+        element.style.display = 'none';
+    });
+
+    document.querySelector('[data-step="' + step + '"]').style.display = 'block';
+}
+
+
+function updateSummary() {
+  const bagsInput = document.querySelector("input[name='bags']");
+  const addressInput = document.querySelector("input[name='address']");
+  const cityInput = document.querySelector("input[name='city']");
+  const postcodeInput = document.querySelector("input[name='postcode']");
+  const phoneInput = document.querySelector("input[name='phone']");
+  const dateInput = document.querySelector("input[name='data']");
+  const timeInput = document.querySelector("input[name='time']");
+  const commentInput = document.querySelector("textarea[name='more_info']");
+
+  // Pobierz wartości z pól formularza
+  const bagsValue = bagsInput.value;
+  const addressValue = addressInput.value;
+  const cityValue = cityInput.value;
+  const postcodeValue = postcodeInput.value;
+  const phoneValue = phoneInput.value;
+  const dateValue = dateInput.value;
+  const timeValue = timeInput.value;
+  const commentValue = commentInput.value;
+
+  // Pobierz zaznaczone kategorie z formularza
+  const selectedCategories = Array.from(document.querySelectorAll("input[name='categories']:checked"))
+    .map(input => input.nextSibling.textContent.trim())
+    .join(", ");
+
+  // Pobierz wybraną organizację z formularza
+  const selectedInstitution = document.querySelector("input[name='organization']:checked");
+  const institutionName = selectedInstitution ? selectedInstitution.nextSibling.querySelector(".title").textContent : "";
+
+  // Uaktualnij podsumowanie
+  document.getElementById("summary-quantity").textContent = `Oddajesz: ${selectedCategories}`;
+  document.getElementById("summary-institution").textContent = `Wybrana organizacja: ${institutionName}`;
+  document.getElementById("summary-address-display").textContent = `Adres odbioru: ${addressValue}`;
+  document.getElementById("summary-city-display").textContent = `Miasto: ${cityValue}`;
+  document.getElementById("summary-zip-code-display").textContent = `Kod pocztowy: ${postcodeValue}`;
+  document.getElementById("summary-phone-number-display").textContent = `Numer telefonu: ${phoneValue}`;
+  document.getElementById("summary-pick-up-date-display").textContent = `Data odbioru: ${dateValue}`;
+  document.getElementById("summary-pick-up-time-display").textContent = `Godzina odbioru: ${timeValue}`;
+  document.getElementById("summary-pick-up-comment-display").textContent = `Uwagi dla kuriera: ${commentValue}`;
+
+
+    goToStep(5);
+}
+
