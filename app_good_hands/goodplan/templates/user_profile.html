@@ -11,35 +11,37 @@
 
     <section class="login-page">
         <h2>Profil użytkownika</h2>
-        <div class="steps--item">
-            Imię: {{ user.first_name }}
+        <div ><h1> Imię: {{ user.first_name }} </h1>
+
         </div>
-        <div class="form-group form-group--50">
-            Nazwisko: {{ user.last_name }}
+        <div > <h1> Nazwisko: {{ user.last_name }} </h1>
+
         </div>
-        <div class="form-group form-group--50">
-            email: {{ user.email }}
+        <div>
+
+            <h1>email: {{ user.email }} </h1>
+
+
         </div>
 
     </section>
 
     <section class="help">
+
         <h2>Lista przekazanych darów</h2>
-    {% if user.donation.count > 0 %}
+        <form method="get">
+         {% if donation.all != 0 %}
         <ul>
-            {% for donations in user.donation.all %}
-                <li>
-                    Worki: {{ donations.quantity }} - Organizacja: {{ donations.institution.name }} - Kategorie:
-                    {% for category in donations.categories.all %}
-                        {{ category.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %} - Data zabrania: {{ donation.pick_up_date }}
-                </li>
+            {% for donation in donation.all %}
+            <li>
+                Worki: {{ donation.quantity }} - Organizacja: {{ donation.institution }} - Kategorie: {{ donation.categories }} - Data: {{ donation.date }}
+            </li>
             {% endfor %}
         </ul>
-    {% else %}
+        {% else %}
         <p>Brak przekazanych darów.</p>
-    {% endif %}
-
+        {% endif %}
+        </form>
     </section>
 
 

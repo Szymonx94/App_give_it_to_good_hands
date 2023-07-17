@@ -350,39 +350,38 @@ if (currentStep === '5') {
     displaySummary();
 }
 
-function submitForm() {
-  // Pobranie danych formularza
-  let bags = document.querySelector('input[name="bags"]').value;
-  let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
-  let address = document.querySelector('input[name="address"]').value;
-  let city = document.querySelector('input[name="city"]').value;
-  let zipCode = document.querySelector('input[name="zip_code"]').value;
-  let phoneNumber = document.querySelector('input[name="phone_number"]').value;
-  let pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
-  let pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
-  let pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
+function submit() {
+  // Pobranie danych z kroku 5
+  const bags = document.querySelector('input[name="bags"]').value;
+  const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(category => category.value);
+  const institution = document.querySelector('input[name="organization"]:checked').value;
+  const address = document.querySelector('input[name="address"]').value;
+  const city = document.querySelector('input[name="city"]').value;
+  const phoneNumber = document.querySelector('input[name="phone_number"]').value || ''; // Domyślna wartość pustego ciągu znaków, jeśli pole jest puste
+  const zipCode = document.querySelector('input[name="zip_code"]').value;
+  const pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
+  const pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
+  const pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
 
-  // Utworzenie obiektu z danymi formularza
-  let formData = {
-    bags: bags,
-    institution: institution,
-    address: address,
-    city: city,
-    zip_code: zipCode,
-    phone_number: phoneNumber,
-    pick_up_date: pickUpDate,
-    pick_up_time: pickUpTime,
-    pick_up_comment: pickUpComment
-  };
-
-  // Wysłanie żądania POST do zapisu danych w bazie
-  fetch('/save-donation', {
+  // Zapisywanie danych w bazie danych za pomocą żądania POST
+  fetch('/add-donation', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
     },
-    body: JSON.stringify(formData)
+    body: JSON.stringify({
+      bags: bags,
+      categories: categories,
+      organization: institution,
+      address: address,
+      city: city,
+      zip_code: zipCode,
+      phone_number: phoneNumber,
+      pick_up_date: pickUpDate,
+      pick_up_time: pickUpTime,
+      pick_up_comment: pickUpComment
+    })
   })
     .then(response => {
       if (response.ok) {
@@ -397,3 +396,7 @@ function submitForm() {
       console.error('Błąd podczas zapisywania danych:', error);
     });
 }
+
+// Wywołanie funkcji submit() po kliknięciu przycisku zapisu formularza
+const submitButton = document.querySelector('button[type="submit"]');
+submitButton.addEventListener('click', submit);
