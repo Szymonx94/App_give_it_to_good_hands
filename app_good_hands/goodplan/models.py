@@ -3,12 +3,16 @@ from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext as _
 
+
 # Create your models here.
 class Category(models.Model):
     """
     Model Category
     """
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 class Institution(models.Model):
     """
@@ -24,6 +28,12 @@ class Institution(models.Model):
     )
     type = models.CharField(max_length=200, default="FD", choices=INSTITUTION_CHOICES)
     categories = models.ManyToManyField(Category)
+
+    class Meta:
+        verbose_name_plural = 'Institutions'  # Nazwa w panelu administracyjnym
+
+    def __str__(self):
+        return self.name  # Wyświetlane dane w przyjazny sposób
 
 class Donation(models.Model):
     quantity = models.PositiveSmallIntegerField()

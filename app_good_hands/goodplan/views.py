@@ -67,7 +67,8 @@ class AddDonationView(LoginRequiredMixin, View):
                                            city=city, zip_code=zip_code, phone_number=phone_number,
                                            pick_up_date=pick_up_date, pick_up_time=pick_up_time,
                                            pick_up_comment=pick_up_comment, user=user)
-        donation.categories.set(categories)
+        donation.categories.add(categories)
+
         return render(request, 'form-confirmation.html')
 
 class LoginView(View):
