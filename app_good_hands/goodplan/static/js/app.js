@@ -253,3 +253,147 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
+
+window.addEventListener('DOMContentLoaded', function() {
+  const categoryCheckboxes = document.querySelectorAll('input[name="categories"]');
+  const organizationElements = document.getElementsByClassName('organization');
+
+  let selectedCategories = [];
+
+  categoryCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      selectedCategories = Array.from(categoryCheckboxes)
+        .filter(function(checkbox) {
+          return checkbox.checked;
+        })
+        .map(function(checkbox) {
+          return checkbox.value;
+        });
+
+      showFilteredOrganizations(selectedCategories);
+    });
+  });
+
+  const showFilteredOrganizations = function(selectedCategories) {
+    for (let i = 0; i < organizationElements.length; i++) {
+      const organizationElement = organizationElements[i];
+      const categoriesAttr = organizationElement.getAttribute('data-categories');
+      const categories = categoriesAttr.split(',');
+
+      if (
+        selectedCategories.length === 0 ||
+        selectedCategories.some(function(categoryId) {
+          return categories.includes(categoryId);
+        })
+      ) {
+        organizationElement.style.display = 'block';
+      } else {
+        organizationElement.style.display = 'none';
+      }
+    }
+  };
+
+
+    const categorySelect = document.getElementById('category-select');
+
+    categorySelect.addEventListener('change', function() {
+        const selectedCategoryId = parseInt(categorySelect.value);
+        showFilteredOrganizations(selectedCategoryId);
+    });
+
+    const prevStepButton = document.querySelector('.prev-step');
+    const nextStepButton = document.querySelector('.next-step');
+
+    prevStepButton.addEventListener('click', function() {
+        // Button back
+        // ...
+    });
+
+    nextStepButton.addEventListener('click', function() {
+        // button next
+        // ...
+    });
+});
+
+// steps 5
+
+
+// Funkcja do wyświetlania podsumowania danych
+function displaySummary() {
+    // Pobranie wartości pól formularza
+    let bags = document.querySelector('input[name="bags"]').value;
+    let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
+    let address = document.querySelector('input[name="address"]').value;
+    let city = document.querySelector('input[name="city"]').value;
+    let zipCode = document.querySelector('input[name="zip_code"]').value;
+    let phoneNumber = document.querySelector('input[name="phone_number"]').value;
+    let pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
+    let pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
+    let pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
+
+    // Ustawienie wartości podsumowania
+    document.getElementById('summary-quantity').innerText = bags + ' worki';
+    document.getElementById('summary-institution').innerText = 'Dla fundacji "' + institution + '"';
+    document.getElementById('summary-address').innerText = 'Ulica: ' + address;
+    document.getElementById('summary-city').innerText = 'Miasto: ' + city;
+    document.getElementById('summary-zip-code').innerText = 'Kod pocztowy: ' + zipCode;
+    document.getElementById('summary-phone-number').innerText = 'Numer telefonu: ' + phoneNumber;
+    document.getElementById('summary-pick-up-date').innerText = 'Data: ' + pickUpDate;
+    document.getElementById('summary-pick-up-time').innerText = 'Godzina: ' + pickUpTime;
+    document.getElementById('summary-pick-up-comment').innerText = 'Uwagi dla kuriera: ' + pickUpComment;
+}
+
+// Sprawdzenie, czy obecny krok to krok 5
+let currentStep = document.querySelector('.form--steps-container .form--steps.active').getAttribute('data-step');
+if (currentStep === '5') {
+    // Wywołanie funkcji displaySummary() w kroku 5
+    displaySummary();
+}
+
+function submitForm() {
+  // Pobranie danych formularza
+  let bags = document.querySelector('input[name="bags"]').value;
+  let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
+  let address = document.querySelector('input[name="address"]').value;
+  let city = document.querySelector('input[name="city"]').value;
+  let zipCode = document.querySelector('input[name="zip_code"]').value;
+  let phoneNumber = document.querySelector('input[name="phone_number"]').value;
+  let pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
+  let pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
+  let pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
+
+  // Utworzenie obiektu z danymi formularza
+  let formData = {
+    bags: bags,
+    institution: institution,
+    address: address,
+    city: city,
+    zip_code: zipCode,
+    phone_number: phoneNumber,
+    pick_up_date: pickUpDate,
+    pick_up_time: pickUpTime,
+    pick_up_comment: pickUpComment
+  };
+
+  // Wysłanie żądania POST do zapisu danych w bazie
+  fetch('/save-donation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => {
+      if (response.ok) {
+        // Przekierowanie na stronę potwierdzenia
+        window.location.href = '/form-confirmation';
+      } else {
+        // Obsługa błędu
+        console.error('Błąd podczas zapisywania danych.');
+      }
+    })
+    .catch(error => {
+      console.error('Błąd podczas zapisywania danych:', error);
+    });
+}

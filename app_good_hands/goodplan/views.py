@@ -2,8 +2,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views import View
 from django.template.response import TemplateResponse
+
+from .forms import DonationForm
 from .models import Donation, Institution, Category
 from django.contrib import messages
 
@@ -30,8 +33,10 @@ class LandingPageView(View):
 
 class AddDonationView(LoginRequiredMixin, View):
     """
-    View AddDonation
+    View AddDonation and post services
     """
+
+    login_url = 'login'
 
     login_url = 'login'
 
@@ -57,16 +62,13 @@ class AddDonationView(LoginRequiredMixin, View):
         pick_up_time = request.POST.get('time')
         pick_up_comment = request.POST.get('more_info')
 
-
         user = request.user
         donation = Donation.objects.create(quantity=quantity, institution_id=int(institution), address=address,
-                                           phone_number=phone_number,
-                                           city=city, zip_code=zip_code, pick_up_date=pick_up_date,
-                                           pick_up_time=pick_up_time,
+                                           city=city, zip_code=zip_code, phone_number=phone_number,
+                                           pick_up_date=pick_up_date, pick_up_time=pick_up_time,
                                            pick_up_comment=pick_up_comment, user=user)
         donation.categories.set(categories)
-        donation.save()
-        return render(request, 'first-page')
+        return render(request, 'form-confirmation.html')
 
 class LoginView(View):
     """Login Users"""
