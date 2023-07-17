@@ -318,56 +318,82 @@ window.addEventListener('DOMContentLoaded', function() {
 // steps 5
 
 
-function goToStep(step) {
-    document.querySelectorAll('[data-step]').forEach(function (element) {
-        element.style.display = 'none';
+// Funkcja do wyświetlania podsumowania danych
+function displaySummary() {
+    // Pobranie wartości pól formularza
+    let bags = document.querySelector('input[name="bags"]').value;
+    let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
+    let address = document.querySelector('input[name="address"]').value;
+    let city = document.querySelector('input[name="city"]').value;
+    let zipCode = document.querySelector('input[name="zip_code"]').value;
+    let phoneNumber = document.querySelector('input[name="phone_number"]').value;
+    let pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
+    let pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
+    let pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
+
+    // Ustawienie wartości podsumowania
+    document.getElementById('summary-quantity').innerText = bags + ' worki';
+    document.getElementById('summary-institution').innerText = 'Dla fundacji "' + institution + '"';
+    document.getElementById('summary-address').innerText = 'Ulica: ' + address;
+    document.getElementById('summary-city').innerText = 'Miasto: ' + city;
+    document.getElementById('summary-zip-code').innerText = 'Kod pocztowy: ' + zipCode;
+    document.getElementById('summary-phone-number').innerText = 'Numer telefonu: ' + phoneNumber;
+    document.getElementById('summary-pick-up-date').innerText = 'Data: ' + pickUpDate;
+    document.getElementById('summary-pick-up-time').innerText = 'Godzina: ' + pickUpTime;
+    document.getElementById('summary-pick-up-comment').innerText = 'Uwagi dla kuriera: ' + pickUpComment;
+}
+
+// Sprawdzenie, czy obecny krok to krok 5
+let currentStep = document.querySelector('.form--steps-container .form--steps.active').getAttribute('data-step');
+if (currentStep === '5') {
+    // Wywołanie funkcji displaySummary() w kroku 5
+    displaySummary();
+}
+
+function submitForm() {
+  // Pobranie danych formularza
+  let bags = document.querySelector('input[name="bags"]').value;
+  let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
+  let address = document.querySelector('input[name="address"]').value;
+  let city = document.querySelector('input[name="city"]').value;
+  let zipCode = document.querySelector('input[name="zip_code"]').value;
+  let phoneNumber = document.querySelector('input[name="phone_number"]').value;
+  let pickUpDate = document.querySelector('input[name="pick_up_date"]').value;
+  let pickUpTime = document.querySelector('input[name="pick_up_time"]').value;
+  let pickUpComment = document.querySelector('textarea[name="pick_up_comment"]').value;
+
+  // Utworzenie obiektu z danymi formularza
+  let formData = {
+    bags: bags,
+    institution: institution,
+    address: address,
+    city: city,
+    zip_code: zipCode,
+    phone_number: phoneNumber,
+    pick_up_date: pickUpDate,
+    pick_up_time: pickUpTime,
+    pick_up_comment: pickUpComment
+  };
+
+  // Wysłanie żądania POST do zapisu danych w bazie
+  fetch('/save-donation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => {
+      if (response.ok) {
+        // Przekierowanie na stronę potwierdzenia
+        window.location.href = '/form-confirmation';
+      } else {
+        // Obsługa błędu
+        console.error('Błąd podczas zapisywania danych.');
+      }
+    })
+    .catch(error => {
+      console.error('Błąd podczas zapisywania danych:', error);
     });
-
-    document.querySelector('[data-step="' + step + '"]').style.display = 'block';
 }
-
-
-function updateSummary() {
-  const bagsInput = document.querySelector("input[name='bags']");
-  const addressInput = document.querySelector("input[name='address']");
-  const cityInput = document.querySelector("input[name='city']");
-  const postcodeInput = document.querySelector("input[name='postcode']");
-  const phoneInput = document.querySelector("input[name='phone']");
-  const dateInput = document.querySelector("input[name='data']");
-  const timeInput = document.querySelector("input[name='time']");
-  const commentInput = document.querySelector("textarea[name='more_info']");
-
-  // Pobierz wartości z pól formularza
-  const bagsValue = bagsInput.value;
-  const addressValue = addressInput.value;
-  const cityValue = cityInput.value;
-  const postcodeValue = postcodeInput.value;
-  const phoneValue = phoneInput.value;
-  const dateValue = dateInput.value;
-  const timeValue = timeInput.value;
-  const commentValue = commentInput.value;
-
-  // Pobierz zaznaczone kategorie z formularza
-  const selectedCategories = Array.from(document.querySelectorAll("input[name='categories']:checked"))
-    .map(input => input.nextSibling.textContent.trim())
-    .join(", ");
-
-  // Pobierz wybraną organizację z formularza
-  const selectedInstitution = document.querySelector("input[name='organization']:checked");
-  const institutionName = selectedInstitution ? selectedInstitution.nextSibling.querySelector(".title").textContent : "";
-
-  // Uaktualnij podsumowanie
-  document.getElementById("summary-quantity").textContent = `Oddajesz: ${selectedCategories}`;
-  document.getElementById("summary-institution").textContent = `Wybrana organizacja: ${institutionName}`;
-  document.getElementById("summary-address-display").textContent = `Adres odbioru: ${addressValue}`;
-  document.getElementById("summary-city-display").textContent = `Miasto: ${cityValue}`;
-  document.getElementById("summary-zip-code-display").textContent = `Kod pocztowy: ${postcodeValue}`;
-  document.getElementById("summary-phone-number-display").textContent = `Numer telefonu: ${phoneValue}`;
-  document.getElementById("summary-pick-up-date-display").textContent = `Data odbioru: ${dateValue}`;
-  document.getElementById("summary-pick-up-time-display").textContent = `Godzina odbioru: ${timeValue}`;
-  document.getElementById("summary-pick-up-comment-display").textContent = `Uwagi dla kuriera: ${commentValue}`;
-
-
-    goToStep(5);
-}
-

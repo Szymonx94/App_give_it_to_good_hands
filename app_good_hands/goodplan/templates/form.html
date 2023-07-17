@@ -2,7 +2,6 @@
 {% block content %}
 {% load static %}
 
-<html lang="pl">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,8 +12,6 @@
 </head>
 <body>
 <header class="header--form-page">
-
-
     <div class="slogan container container--90">
         <div class="slogan--item">
             <h1>
@@ -114,88 +111,88 @@
 
 
             <!-- STEP 3 -->
-          <div data-step="3">
-            <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+            <div data-step="3">
+                <h3>Wybierz organizacje, której chcesz pomóc:</h3>
 
-            {% for institution in institutions %}
-            <div
+                {% for institution in institutions %}
+                <div
                     class="form-group form-group--checkbox organization"
                     data-categories="{% for category in institution.categories.all %}{{ category.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
                     {% if selectedInstitutionId == institution.id %}style="display: block;" {% else
                     %}style="display: none;" {% endif %}
-            >
-              <label>
-                <input
-                        type="radio"
-                        name="organization"
-                        value="{{ institution.id }}"
-                        {% if selectedInstitutionId == institution.id %}checked{% endif %}
-                />
-                <span class="checkbox radio"></span>
-                <span class="description">
+                >
+                    <label>
+                        <input
+                                type="radio"
+                                name="organization"
+                                value="{{ institution.id }}"
+                                {% if selectedInstitutionId == institution.id %}checked{% endif %}
+                        />
+                        <span class="checkbox radio"></span>
+                        <span class="description">
                <div class="title">{{ institution.name }}</div>
                <div class="subtitle">{{ institution.description }}</div>
               </span>
-              </label>
-            </div>
-            {% endfor %}
+                    </label>
+                </div>
+                {% endfor %}
 
-            <div class="form-group form-group--buttons">
-              <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="button" class="btn next-step">Dalej</button>
+                </div>
             </div>
-          </div>
 
 
             <!-- STEP 4 -->
             <div data-step="4">
-                <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
+                <h3>Podaj adres oraz termin odbioru rzeczy przez kuriera:</h3>
 
                 <div class="form-section form-section--columns">
                     <div class="form-section--column">
                         <h4>Adres odbioru</h4>
                         <div class="form-group form-group--inline">
-                            <label> Ulica <input type="text" name="address"/> </label>
+                            <label>Ulica</label>
+                            <input type="text" name="address">
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label> Miasto <input type="text" name="city"/> </label>
+                            <label>Miasto</label>
+                            <input type="text" name="city">
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label>
-                                Kod pocztowy <input type="text" name="postcode"/>
-                            </label>
+                            <label>Kod pocztowy</label>
+                            <input type="text" name="zip_code">
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label>
-                                Numer telefonu <input type="phone" name="phone"/>
-                            </label>
+                            <label>Numer telefonu</label>
+                            <input type="text" name="phone_number">
                         </div>
                     </div>
 
                     <div class="form-section--column">
                         <h4>Termin odbioru</h4>
                         <div class="form-group form-group--inline">
-                            <label> Data <input type="date" name="data"/> </label>
+                            <label>Data</label>
+                            <input type="date" name="pick_up_date">
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label> Godzina <input type="time" name="time"/> </label>
+                            <label>Godzina</label>
+                            <input type="time" name="pick_up_time">
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label>
-                                Uwagi dla kuriera
-                                <textarea name="more_info" rows="5"></textarea>
-                            </label>
+                            <label>Uwagi dla kuriera</label>
+                            <textarea name="pick_up_comment" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="form-group form-group--buttons">
                     <button type="button" class="btn prev-step">Wstecz</button>
-                    <button type="button" class="btn next-step">Dalej</button>
+                    <button type="button" class="btn next-step" onclick="confirmDonation()">Dalej</button>
                 </div>
             </div>
 
@@ -209,38 +206,60 @@
                         <ul>
                             <li>
                                 <span class="icon icon-bag"></span>
-                                <span class="summary--text">worki ubrań w dobrym stanie dla dzieci</span>
+                                <span class="summary--text" id="summary-quantity"></span>
                             </li>
-                            <!-- Add more items if needed -->
+                            <li>
+                                <span class="icon icon-hand"></span>
+                                <span class="summary--text" id="summary-institution"></span>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="form-section form-section--columns">
                         <div class="form-section--column">
-                            <h4>Dane odbiorcy:</h4>
+                            <h4>Adres odbioru:</h4>
                             <ul>
-                                <li id="summary-quantity"></li>
-                                <li id="summary-institution"></li>
-                                <li id="summary-address-display"></li>
-                                <li id="summary-city-display"></li>
-                                <li id="summary-zip-code-display"></li>
-                                <li id="summary-phone-number-display"></li>
+                                <li>
+                                    <strong>Ulica:</strong>
+                                    <span id="summary-address"></span>
+                                </li>
+                                <li>
+                                    <strong>Miasto:</strong>
+                                    <span id="summary-city"></span>
+                                </li>
+                                <li>
+                                    <strong>Kod pocztowy:</strong>
+                                    <span id="summary-zip-code"></span>
+                                </li>
+                                <li>
+                                    <strong>Numer telefonu:</strong>
+                                    <span id="summary-phone-number"></span>
+                                </li>
                             </ul>
                         </div>
 
                         <div class="form-section--column">
                             <h4>Termin odbioru:</h4>
                             <ul>
-                                <li id="summary-pick-up-date-display"></li>
-                                <li id="summary-pick-up-time-display"></li>
-                                <li id="summary-pick-up-comment-display"></li>
+                                <li>
+                                    <strong>Data:</strong>
+                                    <span id="summary-pick-up-date"></span>
+                                </li>
+                                <li>
+                                    <strong>Godzina:</strong>
+                                    <span id="summary-pick-up-time"></span>
+                                </li>
+                                <li>
+                                    <strong>Uwagi dla kuriera:</strong>
+                                    <span id="summary-pick-up-comment"></span>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group form-group--buttons">
-                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="button" class="btn prev-step" onclick="goToStep(4)">Wstecz</button>
                     <button type="submit" class="btn">Potwierdzam</button>
                 </div>
             </div>
@@ -249,44 +268,7 @@
     </div>
 </section>
 
-<footer>
-    <div class="contact">
-        <h2>Skontaktuj się z nami</h2>
-        <h3>Formularz kontaktowy</h3>
-        <form class="form--contact">
-            <div class="form-group form-group--50">
-                <input type="text" name="name" placeholder="Imię"/>
-            </div>
-            <div class="form-group form-group--50">
-                <input type="text" name="surname" placeholder="Nazwisko"/>
-            </div>
-
-            <div class="form-group">
-            <textarea
-                    name="message"
-                    placeholder="Wiadomość"
-                    rows="1"
-            ></textarea>
-            </div>
-
-            <button class="btn" type="submit">Wyślij</button>
-        </form>
-    </div>
-    <div class="bottom-line">
-        <span class="bottom-line--copy">Copyright &copy; 2018</span>
-        <div class="bottom-line--icons">
-            <a href="#" class="btn btn--small"
-            ><img src="{% static 'images/icon-facebook.svg' %}"
-            /></a>
-            <a href="#" class="btn btn--small"
-            ><img src="{% static 'images/icon-instagram.svg' %}"
-            /></a>
-        </div>
-    </div>
-</footer>
 
 <script src="{% static 'js/app.js' %}"></script>
 </body>
-</html>
-
 {% endblock %}
