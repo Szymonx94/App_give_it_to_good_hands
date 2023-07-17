@@ -352,8 +352,8 @@ if (currentStep === '5') {
 
 function submitForm() {
   // Pobranie danych formularza
-  let bags = document.querySelector('input[name="bags"]').value;
-  let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.title').innerText;
+  let quantity = document.querySelector('input[name="bags"]').value;
+  let institution = document.querySelector('input[name="organization"]:checked').parentNode.querySelector('.description .title').innerText;
   let address = document.querySelector('input[name="address"]').value;
   let city = document.querySelector('input[name="city"]').value;
   let zipCode = document.querySelector('input[name="zip_code"]').value;
@@ -364,7 +364,7 @@ function submitForm() {
 
   // Utworzenie obiektu z danymi formularza
   let formData = {
-    bags: bags,
+    quantity: quantity,
     institution: institution,
     address: address,
     city: city,
@@ -396,4 +396,12 @@ function submitForm() {
     .catch(error => {
       console.error('Błąd podczas zapisywania danych:', error);
     });
+}
+
+function goToStep(step) {
+    document.querySelectorAll('[data-step]').forEach(function (element) {
+        element.style.display = 'none';
+    });
+
+    document.querySelector('[data-step="' + step + '"]').style.display = 'block';
 }
