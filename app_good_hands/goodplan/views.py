@@ -65,7 +65,9 @@ class AddDonationView(LoginRequiredMixin, View):
                                            city=city, zip_code=zip_code, phone_number=phone_number,
                                            pick_up_date=pick_up_date, pick_up_time=pick_up_time,
                                            pick_up_comment=pick_up_comment, user=user)
-        donation.categories.add(categories)
+
+        donation.categories.set(categories)
+        donation.save()
 
         return render(request, 'form-confirmation.html')
 
@@ -129,7 +131,15 @@ class UserProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        donations = Donation.objects.all()
         context = {
-            'user': user
+            'user': user,
+            'categories': categories,
+            'institutions': institutions,
+            'donations': donations
         }
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context=context)
+
+
