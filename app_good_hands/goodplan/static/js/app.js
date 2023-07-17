@@ -348,8 +348,8 @@ let currentStep = document.querySelector('.form--steps-container .form--steps.ac
 if (currentStep === '5') {
     // Wywołanie funkcji displaySummary() w kroku 5
     displaySummary();
-}
 
+  
 function submit() {
   // Pobranie danych z kroku 5
   const bags = document.querySelector('input[name="bags"]').value;
@@ -365,6 +365,7 @@ function submit() {
 
   // Zapisywanie danych w bazie danych za pomocą żądania POST
   fetch('/add-donation', {
+
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -397,6 +398,8 @@ function submit() {
     });
 }
 
+
 // Wywołanie funkcji submit() po kliknięciu przycisku zapisu formularza
 const submitButton = document.querySelector('button[type="submit"]');
 submitButton.addEventListener('click', submit);
+
