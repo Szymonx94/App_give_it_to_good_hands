@@ -38,8 +38,6 @@ class AddDonationView(LoginRequiredMixin, View):
 
     login_url = 'login'
 
-    login_url = 'login'
-
     def get(self, request):
         categories = Category.objects.all()
         institutions = Institution.objects.all()
@@ -123,3 +121,14 @@ class RegisterView(View):
 
         messages.error(request, "An error occurred during registration.")
         return redirect('register')
+
+
+class UserProfileView(LoginRequiredMixin, View):
+    template_name = 'user_profile.html'
+
+    def get(self, request):
+        user = request.user
+        context = {
+            'user': user
+        }
+        return render(request, self.template_name, context)
